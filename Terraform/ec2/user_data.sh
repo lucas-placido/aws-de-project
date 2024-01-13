@@ -3,11 +3,12 @@ sudo yum update -y
 sudo python3 -m ensurepip
 sudo pip3 install virtualenv
 sudo chown -R $USER /home/
+sudo -u ec2-user
 
 cd /home/ec2-user
-sudo virtualenv --python="/usr/bin/python3.9" ec2-venv
+virtualenv --python="/usr/bin/python3.9" ec2-venv
 source ec2-venv/bin/activate
-sudo pip3 install boto3
+pip3 install boto3
 
 # Create Python script
 cat > script.py << EOL
@@ -38,9 +39,9 @@ def generate_streaming_data(firehose_client, delivery_stream):
 
 if __name__ == "__main__":        
     firehose_client = boto3.client("firehose", region_name="us-east-1")
-    delivery_stream = 'PUT-S3-tfarF'
+    delivery_stream = 'firehose-delivery-stream'
     generate_streaming_data(firehose_client=firehose_client, delivery_stream=delivery_stream)
-
+    
 EOL
 
 # Make the Python script executable

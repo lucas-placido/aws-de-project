@@ -5,3 +5,7 @@ output "s3-role" {
 output "ec2_role" {
   value = aws_iam_instance_profile.ec2_profile.name
 }
+
+output "firehose_role" {
+  value = aws_iam_role.firehose_assume_role.arn
+}

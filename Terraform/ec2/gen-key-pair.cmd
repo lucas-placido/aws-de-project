@@ -1,1 +1,1 @@
-ssh-keygen -t ed25519 -f "%cd%\key-pair" -N "" -C "my-key-pair"
+ssh-keygen -t ed25519 -f "%cd%\ec2\key-pair" -N "" -C "my-key-pair"

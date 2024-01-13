@@ -41,6 +41,18 @@ module "vpc" {
 
 module "ec2" {
   source = "./ec2"
-  security_group = [module.vpc.security_group]
+  security_group = module.vpc.security_group
   ec2_role = module.iam.ec2_role
+}
+
+module "cloudwatch" {
+  source = "./cloudwatch"
+}
+
+module "kinesis" {
+  source = "./kinesis"
+  firehose_role = module.iam.firehose_role
+  destination_bucket_arn = module.buckets.firehose_bucket_arn
+  cloudwatch_group = module.cloudwatch.cloudwatch_group
+  cloudwatch_stream = module.cloudwatch.cloudwatch_stream
 }

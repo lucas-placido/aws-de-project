@@ -5,6 +5,7 @@
 #  * dms-cloudwatch-logs-role
 #  * dms-access-for-endpoint
 
+# //////// DMS //////////
 data "aws_iam_policy_document" "dms_assume_role" {
   statement {
     actions = ["sts:AssumeRole"]
@@ -74,6 +75,7 @@ resource "aws_iam_role_policy_attachment" "s3_full_access_attachment" {
   role       = aws_iam_role.s3_full_access_role.name
 }
 
+# //////// EC2 //////////
 resource "aws_iam_policy" "ec2_full_access_firehose" {
   name = "ec2_full_access_firehose"
   description = "Allow ec2 to access firehose and iam"
@@ -125,3 +127,47 @@ resource "aws_iam_instance_profile" "ec2_profile" {
   name = "ec2-profile"
   role = aws_iam_role.ec2_assume_firehose_role.name
 }
+
+# //////// Firehose //////////
+resource "aws_iam_role" "firehose_assume_role" {
+  name = "firehose_assume_role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Action = "sts:AssumeRole",
+        Effect = "Allow",
+        Sid = "",
+        Principal = {
+          Service = "firehose.amazonaws.com"
+        }
+      },
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "firehose_access_to_s3" {
+  role = aws_iam_role.firehose_assume_role.name
+  policy_arn = aws_iam_policy.s3_full_access_policy.arn
+}
+
+resource "aws_iam_role_policy_attachment" "firehose_access_to_cloudwatch" {
+  role = aws_iam_role.firehose_assume_role.name
+  policy_arn = aws_iam_policy.full_access_cloudwatch_policy.arn
+}
+
+resource "aws_iam_policy" "full_access_cloudwatch_policy" {
+  name = "full_access_cloudwatch_policy"
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Action   = "cloudwatch:*",
+        Effect   = "Allow",
+        Resource = "*",
+      },      
+    ]
+  })
+}
+
