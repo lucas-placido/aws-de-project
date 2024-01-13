@@ -8,3 +8,7 @@ variable "rds-password" {
   default = "postgres123"
   sensitive = true
 }
+
+variable "security_group_allow_tls_id" {
+  
+}

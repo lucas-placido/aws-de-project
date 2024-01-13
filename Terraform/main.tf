@@ -15,6 +15,7 @@ provider "aws" {
 
 module "databases" {
   source = "./databases"
+  security_group_allow_tls_id = module.vpc.allow_tls_security_group_id
 }
 
 module "iam" {
@@ -41,7 +42,7 @@ module "vpc" {
 
 module "ec2" {
   source = "./ec2"
-  security_group = module.vpc.security_group
+  security_group = module.vpc.allow_tls_security_group_name
   ec2_role = module.iam.ec2_role
 }
 
