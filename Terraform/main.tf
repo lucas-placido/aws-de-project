@@ -42,4 +42,5 @@ module "vpc" {
 module "ec2" {
   source = "./ec2"
   security_group = [module.vpc.security_group]
+  ec2_role = module.iam.ec2_role
 }
