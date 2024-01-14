@@ -11,7 +11,39 @@ source ec2-venv/bin/activate
 pip3 install boto3
 
 # Create Python script
-wget raw.githubusercontent.com/lucas-placido/aws-de-project/feature/kinesis-data-stream/script.py
+cat > script.py << EOL
+import json
+import random
+import time
+import boto3
+from datetime import datetime, timedelta
+
+def generate_random_data():
+    products = ["Produto A", "Produto B", "Produto C", "Produto D", "Produto E", "Produto F", "Produto G", "Produto H"]
+    product = random.choice(products)
+    quantity = random.randint(1, 10)
+    price_per_unit = round(random.uniform(10.0, 50.0), 2)
+    date = (datetime.now() - timedelta(days=random.randint(0, 7))).strftime("%Y-%m-%d")
+    return {"id": str(random.randint(1000, 9999)), "produto": product, "quantidade": quantity, "preco_unitario": price_per_unit, "data": date}
+
+def generate_streaming_data(client, stream_name):
+    while True:
+        data = generate_random_data()
+        data_json = json.dumps(data)
+        response = client.put_record(
+            StreamName=stream_name,
+            Data=data_json.encode('utf-8'),
+            PartitionKey=data["id"]
+        )
+        print(response)
+        time.sleep(1)
+
+if __name__ == "__main__":        
+    client = boto3.client("kinesis", region_name="us-east-1")
+    stream_name = "${stream_name}"
+    generate_streaming_data(client=client, stream_name=stream_name)
+
+EOL
 
 # Make the Python script executable
 sudo chmod +x script.py

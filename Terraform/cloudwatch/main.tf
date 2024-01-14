@@ -1,5 +1,5 @@
 resource "aws_cloudwatch_log_group" "firehose_destination_log_group" {
-  name = "firehose_destination_logs"
+  name = "firehose/destination"
 
   tags = {
     Environment = "Dev"

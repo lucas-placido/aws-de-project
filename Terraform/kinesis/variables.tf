@@ -1,4 +1,8 @@
-variable "firehose_role" {
+variable "kinesis_data_stream_role" {
+  
+}
+
+variable "firehose_role_arn" {
   
 }
 

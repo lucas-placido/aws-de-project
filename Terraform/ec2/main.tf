@@ -4,7 +4,10 @@ resource "aws_instance" "ec2-instance" {
   security_groups = [ var.security_group ]
   key_name = "deployer-key"
   iam_instance_profile = var.ec2_role
-  user_data = file("C:/Lucas/Python/aws/Terraform/ec2/user_data.sh")
+  # user_data = file("C:/Lucas/Python/aws/Terraform/ec2/user_data.sh")
+  user_data = templatefile("C:/Lucas/Python/aws/Terraform/ec2/user_data.sh", {
+    stream_name = var.kinesis_data_stream
+  })
   tags = {
     Name = "tf-instance"
   }

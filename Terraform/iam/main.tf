@@ -92,6 +92,11 @@ resource "aws_iam_policy" "ec2_full_access_firehose" {
         Effect   = "Allow",
         Resource = "*",
       },
+      {
+        Action   = "kinesis:*",
+        Effect   = "Allow",
+        Resource = "*",
+      },
     ]
   })
 }
@@ -147,14 +152,61 @@ resource "aws_iam_role" "firehose_assume_role" {
   })
 }
 
-resource "aws_iam_role_policy_attachment" "firehose_access_to_s3" {
+resource "aws_iam_role_policy_attachment" "attach_firehose_policies_to_role" {
   role = aws_iam_role.firehose_assume_role.name
-  policy_arn = aws_iam_policy.s3_full_access_policy.arn
+  policy_arn = aws_iam_policy.firehose_policies.arn
 }
 
-resource "aws_iam_role_policy_attachment" "firehose_access_to_cloudwatch" {
-  role = aws_iam_role.firehose_assume_role.name
+resource "aws_iam_policy" "firehose_policies" {
+  name = "firehose_policies"
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Action   = "cloudwatch:*",
+        Effect   = "Allow",
+        Resource = "*",
+      },
+      {
+        Action   = "kinesis:*",
+        Effect   = "Allow",
+        Resource = "*",
+      },
+      {
+        Action   = "kinesis:DescribeStream",  # Add this line
+        Effect   = "Allow",
+        Resource = "*",  # Modify this line if you want to restrict it to a specific Kinesis stream
+      },
+      {
+        Action   = "s3:*",
+        Effect   = "Allow",
+        Resource = "*",
+      },
+    ]
+  })
+}
+
+// Kinesis Data Stream
+resource "aws_iam_role" "kinesis_data_stream_role" {
+  name = "kinesis_data_stream_role"
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Action = "sts:AssumeRole",
+        Effect = "Allow",
+        Sid = "",
+        Principal = {
+          Service = "kinesis.amazonaws.com"
+        }
+      },
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "cloudwatch_access_to_kinesis" {
   policy_arn = aws_iam_policy.full_access_cloudwatch_policy.arn
+  role = aws_iam_role.kinesis_data_stream_role.name
 }
 
 resource "aws_iam_policy" "full_access_cloudwatch_policy" {
@@ -170,4 +222,3 @@ resource "aws_iam_policy" "full_access_cloudwatch_policy" {
     ]
   })
 }
-

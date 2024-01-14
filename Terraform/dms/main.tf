@@ -14,7 +14,7 @@ resource "aws_dms_replication_instance" "replication" {
   }
 
   vpc_security_group_ids = [
-    var.aws_security_group_id
+    var.security_group_allow_tls_id
   ]
 
 }

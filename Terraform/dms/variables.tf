@@ -1,4 +1,4 @@
-variable "aws_security_group_id" {
+variable "security_group_allow_tls_id" {
   
 }
 

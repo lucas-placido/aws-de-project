@@ -7,5 +7,9 @@ output "ec2_role" {
 }
 
 output "firehose_role" {
-  value = aws_iam_role.firehose_assume_role.arn
+  value = aws_iam_role.firehose_assume_role
+}
+
+output "kinesis_data_stream_role" {
+  value = aws_iam_role.kinesis_data_stream_role
 }
