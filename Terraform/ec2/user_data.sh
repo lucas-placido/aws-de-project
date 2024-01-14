@@ -18,22 +18,25 @@ import time
 import boto3
 from datetime import datetime, timedelta
 
-def generate_random_data():
+def generate_random_data(id):
     products = ["Produto A", "Produto B", "Produto C", "Produto D", "Produto E", "Produto F", "Produto G", "Produto H"]
     product = random.choice(products)
     quantity = random.randint(1, 10)
     price_per_unit = round(random.uniform(10.0, 50.0), 2)
     date = (datetime.now() - timedelta(days=random.randint(0, 7))).strftime("%Y-%m-%d")
-    return {"id": str(random.randint(1000, 9999)), "produto": product, "quantidade": quantity, "preco_unitario": price_per_unit, "data": date}
+    return {"id": id, "produto": product, "quantidade": quantity, "preco_unitario": price_per_unit, "data": date}
 
-def generate_streaming_data(client, stream_name):
-    while True:
-        data = generate_random_data()
+def generate_streaming_data(client, stream_name):    
+    x = 1000
+    y = 2001
+    while x < y:
+        data = generate_random_data(id = x)
+        x += 1
         data_json = json.dumps(data)
         response = client.put_record(
             StreamName=stream_name,
             Data=data_json.encode('utf-8'),
-            PartitionKey=data["id"]
+            PartitionKey=str(data["id"])
         )
         print(response)
         time.sleep(1)
