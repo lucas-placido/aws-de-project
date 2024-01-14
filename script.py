@@ -25,5 +25,5 @@ def generate_streaming_data(firehose_client, delivery_stream):
 
 if __name__ == "__main__":        
     firehose_client = boto3.client("firehose", region_name="us-east-1")
-    delivery_stream = 'PUT-S3-tfarF'
+    delivery_stream = 'firehose-delivery-stream'
     generate_streaming_data(firehose_client=firehose_client, delivery_stream=delivery_stream)
