@@ -1,0 +1,6 @@
+
+Terraform/.terraform.lock.hcl
+Terraform/.terraform/*
+Terraform/terraform.tfstate*
+Terraform/ec2/key-pair*
+notes.txt

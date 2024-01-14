@@ -2,13 +2,6 @@
 // rds.force_ssl -> 0
 // rds.logical_replication -> 1
 // https://github.com/dbeaver/dbeaver/issues/21616
-
-resource "aws_default_vpc" "default" {
-  tags = {
-    Name = "Default VPC"
-  }
-}
-
 resource "aws_db_instance" "postgres-db" {
   allocated_storage    = 10
   db_name              = "mydb"
@@ -21,7 +14,7 @@ resource "aws_db_instance" "postgres-db" {
   
   publicly_accessible = true
   skip_final_snapshot  = true
-  vpc_security_group_ids = [aws_default_vpc.default.default_security_group_id]
+  vpc_security_group_ids = [var.security_group_allow_tls_id]
   parameter_group_name = aws_db_parameter_group.custom-pg.name
 }
 

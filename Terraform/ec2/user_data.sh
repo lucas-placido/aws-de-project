@@ -3,11 +3,12 @@ sudo yum update -y
 sudo python3 -m ensurepip
 sudo pip3 install virtualenv
 sudo chown -R $USER /home/
+sudo -u ec2-user
 
 cd /home/ec2-user
-sudo virtualenv --python="/usr/bin/python3.9" ec2-venv
+virtualenv --python="/usr/bin/python3.9" ec2-venv
 source ec2-venv/bin/activate
-sudo pip3 install boto3
+pip3 install boto3
 
 # Create Python script
 cat > script.py << EOL
@@ -25,21 +26,22 @@ def generate_random_data():
     date = (datetime.now() - timedelta(days=random.randint(0, 7))).strftime("%Y-%m-%d")
     return {"id": str(random.randint(1000, 9999)), "produto": product, "quantidade": quantity, "preco_unitario": price_per_unit, "data": date}
 
-def generate_streaming_data(firehose_client, delivery_stream):
+def generate_streaming_data(client, stream_name):
     while True:
         data = generate_random_data()
         data_json = json.dumps(data)
-        response = firehose_client.put_record(
-            DeliveryStreamName=delivery_stream,
-            Record={'Data': data_json.encode('utf-8')}
+        response = client.put_record(
+            StreamName=stream_name,
+            Data=data_json.encode('utf-8'),
+            PartitionKey=data["id"]
         )
         print(response)
         time.sleep(1)
 
 if __name__ == "__main__":        
-    firehose_client = boto3.client("firehose", region_name="us-east-1")
-    delivery_stream = 'PUT-S3-tfarF'
-    generate_streaming_data(firehose_client=firehose_client, delivery_stream=delivery_stream)
+    client = boto3.client("kinesis", region_name="us-east-1")
+    stream_name = "${stream_name}"
+    generate_streaming_data(client=client, stream_name=stream_name)
 
 EOL
 

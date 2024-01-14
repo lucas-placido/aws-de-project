@@ -1,5 +1,4 @@
 resource "aws_dms_replication_instance" "replication" {
-
   allocated_storage            = 20
   apply_immediately            = true
   auto_minor_version_upgrade   = true
@@ -7,14 +6,14 @@ resource "aws_dms_replication_instance" "replication" {
   multi_az                     = false
   publicly_accessible          = true
   replication_instance_class   = "dms.t2.micro"
-  replication_instance_id      = "test-dms-replication-instance-tf"
+  replication_instance_id      = "replication-instance"
 
   tags = {
     Name = "test"
   }
 
   vpc_security_group_ids = [
-    var.aws_security_group_id
+    var.security_group_allow_tls_id
   ]
 
 }
@@ -46,9 +45,9 @@ resource "aws_dms_s3_endpoint" "example" {
 
 # Create a new replication task
 resource "aws_dms_replication_task" "dms-task" {  
-  migration_type            = "cdc"
+  migration_type            = "full-load-and-cdc"
   replication_instance_arn  = aws_dms_replication_instance.replication.replication_instance_arn
-  replication_task_id       = "task-id"  
+  replication_task_id       = "replication-task"  
   source_endpoint_arn       = aws_dms_endpoint.rds-endpoint.endpoint_arn
 table_mappings = <<TABLE_MAPPINGS
 {
