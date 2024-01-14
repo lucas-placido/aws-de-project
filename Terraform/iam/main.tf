@@ -1,9 +1,6 @@
 # Database Migration Service requires the below IAM Roles to be created before
 # replication instances can be created. See the DMS Documentation for
 # additional information: https://docs.aws.amazon.com/dms/latest/userguide/CHAP_Security.html#CHAP_Security.APIRole
-#  * dms-vpc-role
-#  * dms-cloudwatch-logs-role
-#  * dms-access-for-endpoint
 
 # //////// DMS //////////
 data "aws_iam_policy_document" "dms_assume_role" {
@@ -17,11 +14,6 @@ data "aws_iam_policy_document" "dms_assume_role" {
   }
 }
 
-resource "aws_iam_role" "dms-access-for-endpoint" {
-  assume_role_policy = data.aws_iam_policy_document.dms_assume_role.json
-  name               = "dms-access-for-endpoint"
-}
-
 resource "aws_iam_role" "dms-vpc-role" {
   assume_role_policy = data.aws_iam_policy_document.dms_assume_role.json
   name               = "dms-vpc-role"
@@ -32,6 +24,7 @@ resource "aws_iam_role_policy_attachment" "dms-vpc-role-AmazonDMSVPCManagementRo
   role       = aws_iam_role.dms-vpc-role.name
 }
 
+// DMS Endpoint Role
 resource "aws_iam_role" "s3_full_access_role" {
   name = "s3_full_access_role"
 
@@ -123,7 +116,7 @@ resource "aws_iam_role" "ec2_assume_firehose_role" {
   }
 }
 
-resource "aws_iam_role_policy_attachment" "ec2-attatch-role-policy" {
+resource "aws_iam_role_policy_attachment" "ec2_attatch_role_policy" {
   policy_arn = aws_iam_policy.ec2_full_access_firehose.arn
   role = aws_iam_role.ec2_assume_firehose_role.name
 }

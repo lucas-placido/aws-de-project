@@ -29,6 +29,7 @@ module "dms" {
   bucket_name = module.buckets.bucket-name
   s3-role = module.iam.s3-role
   security_group_allow_tls_id = module.vpc.allow_tls_security_group_id
+  dms_role = module.iam.dms_role.name
 }
 
 module "buckets" {

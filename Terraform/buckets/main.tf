@@ -5,7 +5,7 @@
 # ${random_integer.random_number.result}
 
 resource "aws_s3_bucket" "relational_storage" {  
-  bucket = "dms-target-791" 
+  bucket = "dms-target-91" 
 
   tags = {
     Name        = "RDS Postgres Data"
@@ -14,7 +14,7 @@ resource "aws_s3_bucket" "relational_storage" {
 }
 
 resource "aws_s3_bucket" "streaming_storage" {
-  bucket = "ec2-target-791"
+  bucket = "ec2-target-91"
 
   tags = {
     Name        = "EC2/Kinesis Firehose Data"

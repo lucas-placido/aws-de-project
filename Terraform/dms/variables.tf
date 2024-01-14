@@ -17,3 +17,7 @@ variable "bucket_name" {
 variable "s3-role" {
   
 }
+
+variable "dms_role" {
+  
+}

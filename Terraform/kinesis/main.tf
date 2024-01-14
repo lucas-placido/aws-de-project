@@ -30,7 +30,7 @@ resource "aws_kinesis_firehose_delivery_stream" "extended_s3_stream" {
     role_arn   = var.firehose_role_arn
     bucket_arn =var.destination_bucket_arn
     buffering_interval = 30
-    buffering_size = 5
+    buffering_size = 5     
     
     cloudwatch_logging_options {
       enabled = true
