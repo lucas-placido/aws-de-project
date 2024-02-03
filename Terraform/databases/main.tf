@@ -4,7 +4,7 @@
 // https://github.com/dbeaver/dbeaver/issues/21616
 resource "aws_db_instance" "postgres-db" {
   allocated_storage    = 10
-  db_name              = "mydb"
+  db_name              = var.rds_db_name
   identifier = "postgres"
   engine               = "postgres"
   engine_version       = "15.4"

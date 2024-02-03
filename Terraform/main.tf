@@ -60,3 +60,9 @@ module "kinesis" {
   cloudwatch_group = module.cloudwatch.cloudwatch_group
   cloudwatch_stream = module.cloudwatch.cloudwatch_stream
 }
+
+module "glue" {
+  source = "./glue"
+  glue_role = module.iam.glue_role
+  bucket = module.buckets.ec2_bucket.bucket
+}
