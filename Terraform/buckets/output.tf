@@ -5,3 +5,7 @@ output "bucket-name" {
 output "firehose_bucket_arn" {
   value = aws_s3_bucket.streaming_storage.arn
 }
+
+output "ec2_bucket" {
+  value = aws_s3_bucket.streaming_storage
+}

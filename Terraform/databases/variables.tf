@@ -9,6 +9,11 @@ variable "rds-password" {
   sensitive = true
 }
 
+
+variable "rds_db_name" {
+  default = "mydb"
+}
+
 variable "security_group_allow_tls_id" {
   
 }

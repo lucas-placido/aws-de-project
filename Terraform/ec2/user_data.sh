@@ -1,5 +1,6 @@
 #!/bin/bash
 sudo yum update -y
+sudo yum install -y postgresql15
 sudo python3 -m ensurepip
 sudo pip3 install virtualenv
 sudo chown -R $USER /home/

@@ -17,3 +17,7 @@ output "firehose_role" {
 output "kinesis_data_stream_role" {
   value = aws_iam_role.kinesis_data_stream_role
 }
+
+output "glue_role" {
+  value = aws_iam_role.glue_crawler
+}
